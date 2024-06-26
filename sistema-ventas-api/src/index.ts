@@ -1,50 +1,50 @@
 import express, { Application } from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
+import swaggerUI from 'swagger-ui-express';
 import swaggerDocs from './routes/api.docs';
-import swaggerUi from 'swagger-ui-express';
+import indexRoutes from './routes/index.routes';
 
-class Server {
-    //TODO : Crear la instancia global de nuestra app
+class Server { 
+    //TODO: Crear la instancia global para nuestra app.
     public app: Application;
+
     //TODO: Generar el constructor
-    constructor(){
+    constructor() {
         this.app = express();
         this.config();
         this.routes();
     }
 
-    // *generar un metodo para la configuracion
+    //TODO: Generar un método para la configuración
     private config(): void {
+        //TODO: Configuración del puerto para el sever.
+        this.app.set("port", process.env.PORT || 3000);
 
-        // * Configuración del puerto para el server.
-        this.app.set('port', 3000);
-
-
-        // * Mostrar las peticiones en consola
+        //TODO: Mostrar las peticiones en consola
         this.app.use(morgan("dev"));
 
-        // * Uso de CORS(Cross Origin)
-        this.app.use(cors);
+        //TODO: Uso de CORS (Cross Origin)
+        this.app.use(cors());
 
-        // * Generar restricciones a la API
-        this.app.use(express.json);
-        this.app.use(express.urlencoded({extended: false}));
+        //TODO: Generar restricción a la API
+        this.app.use(express.json());
+        this.app.use(express.urlencoded({ extended: false}));
     }
-    
 
-    //TODO: Generar un método para la configuración de rutas
+    //TODO: !Generar un métood para la configuración de rutas
     private routes(): void {
-        //throw new Error ('Not Implemented');
-        this.app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+        this.app.use("/api/docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
+        this.app.use("/api", indexRoutes);
     }
-    //TODO: Generar un método para inicializar el servicio
-    start(): void{
-        this.app.listen(this.app.use("port"), ()=> {
+
+    //TODO: Generar un método para inicializar el servicio.
+    start(): void {
+        this.app.listen(this.app.get("port"), () => {
             console.log("Server on port", this.app.get("port"));
         });
     }
-
 }
+
 const server = new Server();
 server.start();
