@@ -1,11 +1,27 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
+import prisma from '../database/database';
 
 class IndexController {
 
-    public index(req: Request, res: Response){
+    public async index(req: Request, res: Response){
         try{
             //throw new RangeError('Error inesperado');
-            return res.json({message: "Api Works!!!"});
+            /*const newUser = await prisma.usuario.create({
+                data: {
+                    nombre:'Alessandra',
+                    apellidos:'Fuentes',
+                    username:'AFuentes',
+                    password:'1234',
+                }
+            })*/
+            const usuarios = await prisma.usuario.findMany();
+
+            /*const deletedUser = await prisma.usuario.delete({
+                where: { cveUsuario: newUser.cveUsuario }
+            })*/
+
+            //return res.json({message: "Api Works!!!"});
+            return res.json(usuarios);
         }catch (error: any){
             return res.status(500).json({message:`Error:${error.message}`});
         }
