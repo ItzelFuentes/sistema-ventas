@@ -1,9 +1,6 @@
 <mat-sidenav-container>
   <mat-sidenav #sidenav mode="push">
-    <ul>
-      <li>Lista 1</li>
-      <li>Lista 2</li>
-    </ul>
+      <app-sidebar></app-sidebar>
   </mat-sidenav>
   <mat-sidenav-content>
       <app-header (toggleSidenav)="sidenav.toggle()"></app-header>
@@ -11,4 +8,4 @@
       <app-footer></app-footer>
   </mat-sidenav-content>
 </mat-sidenav-container>
-
+<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "ball-fussion" [fullScreen] = "true"><p style="color: white" > Cargando... </p></ngx-spinner>

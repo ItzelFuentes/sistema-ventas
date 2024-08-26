@@ -5,6 +5,8 @@ import SwaggerUi  from "swagger-ui-express";
 import swaggerDocs from "./routes/api.docs";
 import indexRoutes from "./routes/index.routes";
 import authRoutes from "./routes/auth.routes";
+import usuarioRoutes from "./routes/usuario.routes";
+import rolRoutes from "./routes/rol.routes";
 
 class Server {
     // * Crear la instancia global de nuestra aplicación
@@ -39,6 +41,9 @@ class Server {
         this.app.use("/api/docs", SwaggerUi.serve, SwaggerUi.setup(swaggerDocs));
         this.app.use("/api", indexRoutes);
         this.app.use("/api/auth", authRoutes);
+        this.app.use("/api/usuario", usuarioRoutes);  
+        this.app.use("/api/rol", rolRoutes);
+
     }
     
     // * Generar un método para inicializar el servicio
