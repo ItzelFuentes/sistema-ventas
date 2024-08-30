@@ -14,10 +14,9 @@ export class UsuariosService {
   constructor(private snackBar: MatSnackBar, private http: HttpClient) { }
 
   private getHeaders() {
-    const token = localStorage.getItem('authToken');
-    console.log('Token:', token); // Verifica que el token esté presente
+    const token = localStorage.getItem('jwt');
     return new HttpHeaders({
-      'Authorization': `Bearer ${token}` // Asegúrate de que esté en el formato correcto
+      'auth': `${token}` 
     });
   }
 

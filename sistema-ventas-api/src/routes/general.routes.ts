@@ -11,7 +11,7 @@ class GeneralRoutes {
     }
 
     private config() {
-        this.router.get('/roles', [jwtCheck], generalController.listarRoles);
+        this.router.get('/roles', generalController.listarRoles);
     }
 
 }

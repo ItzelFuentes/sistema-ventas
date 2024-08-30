@@ -30,11 +30,7 @@ class Server {
         this.app.use(morgan("dev"));
 
         // * Uso de CORS(Cross Origin)
-        this.app.use(cors({
-            origin: 'http://localhost:4200', // Cambia esto al dominio de tu frontend
-            methods: 'GET, POST, PUT, DELETE',
-            allowedHeaders: 'Content-Type, Authorization'
-        }));
+        this.app.use(cors());
 
         // * Generar restricciones a la API
         this.app.use(express.json());

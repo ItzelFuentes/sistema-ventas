@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const jwt_check_1 = require("../middlewares/jwt.check");
 const general_controller_1 = require("../controllers/general.controller");
 class GeneralRoutes {
     constructor() {
@@ -9,7 +8,7 @@ class GeneralRoutes {
         this.config();
     }
     config() {
-        this.router.get('/roles', [jwt_check_1.jwtCheck], general_controller_1.generalController.listarRoles);
+        this.router.get('/roles', general_controller_1.generalController.listarRoles);
     }
 }
 const generalRoutes = new GeneralRoutes();
