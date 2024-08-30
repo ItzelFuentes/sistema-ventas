@@ -16,103 +16,156 @@ exports.usuarioController = void 0;
 const database_1 = __importDefault(require("../database/database"));
 const utils_1 = require("../utils/utils");
 class UsuarioController {
-    getUsuarios(req, res) {
+    /**
+     * @description Lista los usuarios disponibles
+     * @param req
+     * @param res
+     * @returns Promise<Response<any, Record<string, any>> | undefined>
+     */
+    listar(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const usuarios = yield database_1.default.usuario.findMany({
-                    include: {
-                        rol: true,
+                const token = req.headers["auth"];
+                const currentUser = utils_1.utils.getPayload(token);
+                const result = yield database_1.default.usuario.findMany({
+                    select: {
+                        cveUsuario: true,
+                        nombre: true,
+                        apellidos: true,
+                        username: true,
+                        fechaRegistro: true,
+                        cveRol: true,
+                        rol: true
                     },
-                });
-                return res.json(usuarios);
-            }
-            catch (error) {
-                return res.status(500).json({ message: "Error retrieving users" });
-            }
-        });
-    }
-    getUsuario(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const { id } = req.params;
-                const usuario = yield database_1.default.usuario.findUnique({
-                    where: { cveUsuario: Number(id) },
-                    include: {
-                        rol: true, // Include related Rol data
-                    },
-                });
-                if (!usuario) {
-                    return res.status(404).json({ message: "User not found" });
-                }
-                return res.json(usuario);
-            }
-            catch (error) {
-                return res.status(500).json({ message: "Error retrieving user" });
-            }
-        });
-    }
-    createUsuario(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const { nombre, apellidos, username, password, cveRol } = req.body;
-                const hashedPassword = (yield utils_1.utils.hashPassword(password)).toString();
-                const newUsuario = yield database_1.default.usuario.create({
-                    data: {
-                        nombre,
-                        apellidos,
-                        username,
-                        password: hashedPassword,
-                        cveRol
+                    where: {
+                        cveUsuario: {
+                            not: currentUser.cveUsuario
+                        }
                     }
                 });
-                return res.status(201).json(newUsuario);
+                res.json(result);
             }
             catch (error) {
-                return res.status(500).json({ message: "Error creating user" });
+                return res.status(500).json({ message: `${error.message}` });
             }
         });
     }
-    deleteUsuario(req, res) {
+    /**
+     *  @description Inserción de usuarios a la bd
+     * @param req
+     * @param res
+     * @returns Promise<Response<any, Record<string, any>> | undefined>
+     */
+    insertar(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { id } = req.params;
-                yield database_1.default.usuario.delete({
-                    where: { cveUsuario: Number(id) }
-                });
-                return res.status(204).send(); // No content response for successful deletion
-            }
-            catch (error) {
-                return res.status(500).json({ message: "Error deleting user" });
-            }
-        });
-    }
-    updateUsuario(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const { id } = req.params;
-                const { nombre, apellidos, username, password, cveRol } = req.body;
-                // Check if user exists
-                const usuarioExists = yield database_1.default.usuario.findUnique({
-                    where: { cveUsuario: Number(id) }
-                });
-                if (!usuarioExists) {
-                    return res.status(404).json({ message: "User not found" });
-                }
-                // Update the user
-                const updatedUsuario = yield database_1.default.usuario.update({
-                    where: { cveUsuario: Number(id) },
-                    data: {
-                        nombre,
-                        apellidos,
-                        username,
-                        password,
-                        cveRol
+                // se obtienen los datos del body
+                var usuario = req.body;
+                // encriptar nuestra contraseña
+                var encryptedText = yield utils_1.utils.hashPassword(usuario.password);
+                usuario.password = encryptedText;
+                const newUser = {
+                    nombre: usuario.nombre.trim(),
+                    apellidos: usuario.apellidos.trim(),
+                    username: usuario.username.trim(),
+                    password: usuario.password.trim(),
+                    cveRol: usuario.cveRol
+                };
+                // Verificar ROL
+                const rol = yield database_1.default.rol.findMany({
+                    where: {
+                        cveRol: newUser.cveRol
                     }
                 });
-                return res.json(updatedUsuario);
+                if (rol.length <= 0) {
+                    return res.status(404).json({ message: "El rol no existe" });
+                }
+                // Verificar si el usuario existe
+                const verifyUsername = yield database_1.default.usuario.findMany({
+                    where: {
+                        username: newUser.username
+                    }
+                });
+                if (verifyUsername.length > 0) {
+                    return res.status(404).json({ message: "El usuario ya existe" });
+                }
+                // inserción de los datos
+                const result = yield database_1.default.usuario.create({
+                    data: newUser
+                });
+                return res.json(result);
             }
             catch (error) {
-                return res.status(500).json({ message: "Error updating user" });
+                console.log(error);
+                return res.status(500).json({ message: `${error.message}` });
+            }
+        });
+    }
+    actualizar(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                // se obtienen los datos del body
+                var usuario = req.body;
+                const updateUser = {
+                    nombre: usuario.nombre.trim(),
+                    apellidos: usuario.apellidos.trim(),
+                    cveRol: usuario.cveRol
+                };
+                // Verificar si existe usuario
+                const verifyUser = yield database_1.default.usuario.findMany({
+                    where: {
+                        cveUsuario: usuario.cveUsuario
+                    }
+                });
+                if (verifyUser.length <= 0) {
+                    return res.status(404).json({ message: "El usuario no existe" });
+                }
+                // Verificar rol
+                const rol = yield database_1.default.rol.findMany({
+                    where: {
+                        cveRol: updateUser.cveRol
+                    }
+                });
+                if (rol.length <= 0) {
+                    return res.status(404).json({ message: "El rol no existe" });
+                }
+                // actualización de los datos
+                const result = yield database_1.default.usuario.update({
+                    where: {
+                        cveUsuario: usuario.cveUsuario
+                    },
+                    data: updateUser
+                });
+                return res.json(result);
+            }
+            catch (error) {
+                return res.status(500).json({ message: `${error.message}` });
+            }
+        });
+    }
+    eliminar(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                // se obtienen los datos del body
+                var { cveUsuario } = req.params;
+                // Verificar si existe usuario
+                const verifyUser = yield database_1.default.usuario.findMany({
+                    where: {
+                        cveUsuario: parseInt(cveUsuario)
+                    }
+                });
+                if (verifyUser.length <= 0) {
+                    return res.status(404).json({ message: "El usuario no existe" });
+                }
+                const result = yield database_1.default.usuario.delete({
+                    where: {
+                        cveUsuario: parseInt(cveUsuario)
+                    }
+                });
+                return res.json(result);
+            }
+            catch (error) {
+                return res.status(500).json({ message: `${error.message}` });
             }
         });
     }

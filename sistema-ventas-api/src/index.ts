@@ -5,8 +5,9 @@ import SwaggerUi  from "swagger-ui-express";
 import swaggerDocs from "./routes/api.docs";
 import indexRoutes from "./routes/index.routes";
 import authRoutes from "./routes/auth.routes";
-import usuarioRoutes from "./routes/usuario.routes";
-import rolRoutes from "./routes/rol.routes";
+import usuarioRoutes from './routes/usuario.routes';
+import generalRoutes from './routes/general.routes';
+
 
 class Server {
     // * Crear la instancia global de nuestra aplicación
@@ -29,7 +30,11 @@ class Server {
         this.app.use(morgan("dev"));
 
         // * Uso de CORS(Cross Origin)
-        this.app.use(cors());
+        this.app.use(cors({
+            origin: 'http://localhost:4200', // Cambia esto al dominio de tu frontend
+            methods: 'GET, POST, PUT, DELETE',
+            allowedHeaders: 'Content-Type, Authorization'
+        }));
 
         // * Generar restricciones a la API
         this.app.use(express.json());
@@ -41,8 +46,8 @@ class Server {
         this.app.use("/api/docs", SwaggerUi.serve, SwaggerUi.setup(swaggerDocs));
         this.app.use("/api", indexRoutes);
         this.app.use("/api/auth", authRoutes);
-        this.app.use("/api/usuario", usuarioRoutes);  
-        this.app.use("/api/rol", rolRoutes);
+        this.app.use("/api/usuarios", usuarioRoutes);
+        this.app.use("/api/general", generalRoutes);
 
     }
     

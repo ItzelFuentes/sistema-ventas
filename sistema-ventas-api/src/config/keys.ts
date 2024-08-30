@@ -1,6 +1,5 @@
-
 export default {
     secret: {
-        jwt : 'abc123&())&%-_'
+        jwt : '63S7iKv9_P'
     }
 }

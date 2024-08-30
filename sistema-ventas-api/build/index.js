@@ -11,7 +11,7 @@ const api_docs_1 = __importDefault(require("./routes/api.docs"));
 const index_routes_1 = __importDefault(require("./routes/index.routes"));
 const auth_routes_1 = __importDefault(require("./routes/auth.routes"));
 const usuario_routes_1 = __importDefault(require("./routes/usuario.routes"));
-const rol_routes_1 = __importDefault(require("./routes/rol.routes"));
+const general_routes_1 = __importDefault(require("./routes/general.routes"));
 class Server {
     // ? Generar el constructor
     constructor() {
@@ -36,8 +36,8 @@ class Server {
         this.app.use("/api/docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(api_docs_1.default));
         this.app.use("/api", index_routes_1.default);
         this.app.use("/api/auth", auth_routes_1.default);
-        this.app.use("/api/usuario", usuario_routes_1.default);
-        this.app.use("/api/rol", rol_routes_1.default);
+        this.app.use("/api/usuarios", usuario_routes_1.default);
+        this.app.use("/api/general", general_routes_1.default);
     }
     // * Generar un método para inicializar el servicio
     start() {

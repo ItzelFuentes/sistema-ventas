@@ -1,26 +1,26 @@
 import { Injectable } from "@angular/core";
 import { AbstractControl } from "@angular/forms";
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root'})
 export class BaseForm {
 
     constructor() { }
 
-    isValiedfield(form: AbstractControl | null): boolean {
+    isValidfield(form: AbstractControl | null): boolean {
         var bandera = false;
 
-        if(form) 
-            form.touched || form.dirty && form.invalid
-        
-        return bandera;
+        if (form)
+            bandera = form.touched || form.dirty && form.invalid;
+
+        return bandera; 
     }
 
-    getErrorMessage(form: AbstractControl | null) {
+    getErrorMessage(form: AbstractControl | null) { 
         let message = "";
 
-        if(form) {
+        if (form) {
             const { errors } = form;
-            if(errors) {
+            if (errors) {
                 const messages: any = {
                     required: 'Campo requerido',
                     email: 'Formato inválido',
@@ -30,7 +30,7 @@ export class BaseForm {
                     minlength: 'Formato inválido'
                 }
                 const errorKey = Object.keys(errors).find(Boolean);
-                if(errorKey) message = messages[errorKey];
+                if (errorKey) message = messages[errorKey];
             }
         }
         return message;

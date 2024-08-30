@@ -7,7 +7,7 @@ export interface Usuario {
     username?: String;
     password?: String;
     fechaRegistro?: Date;
-    //rol: String,
-    cveRol?: String;
+    cveRol?: number;
     rol?: Rol;
 }
+

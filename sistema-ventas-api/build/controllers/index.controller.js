@@ -10,35 +10,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.indexController = void 0;
-const utils_1 = require("../utils/utils");
 class IndexController {
     index(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                //throw new RangeError('Error inesperado');
-                /*const newUser = await prisma.usuario.create({
-                    data: {
-                        nombre:'Alessandra',
-                        apellidos:'Fuentes',
-                        username:'AFuentes',
-                        password:'1234',
-                    }
-                })*/
-                const user = {
-                    cveUsuario: 1,
-                    nombre: 'Alessandra',
-                    rol: [1, 2, 3]
-                };
-                const token = utils_1.utils.generateJWT(user);
-                console.log(token);
-                //const usuarios = await prisma.usuario.findMany();
-                /*const deletedUser = await prisma.usuario.delete({
-                    where: { cveUsuario: newUser.cveUsuario }
-                })*/
-                /*var jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdmVVc3VhcmlvIjoxLCJub21icmUiOiJBbGVzc2FuZHJhIiwicm9sIjpbMSwyLDNdLCJpYXQiOjE3MjAyMjgwNzEsImV4cCI6MTcyMDIzMTY3MX0.K9CkGJo-zt8mxcT-zcIouIM5wcFqoZyM81JqKPd8ebg";
-                var data = utils.getPayload(jwt);
-                console.log(data);
-                */
                 return res.json({ message: "Api Works!!!" });
                 //return res.json(usuarios);
             }

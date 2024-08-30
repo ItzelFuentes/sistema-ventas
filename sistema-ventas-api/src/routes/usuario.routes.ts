@@ -1,9 +1,11 @@
-import { Router } from 'express';
-import { usuarioController } from '../controllers/usuario.controller';
-import { usuarioRules } from '../rules/usuario.rules';
-import { validate } from '../middlewares/validator.check';
+import { Router } from "express";
+import { usuarioController } from "../controllers/usuario.controller";
+import { insertRules, updateRules } from "../rules/usuario.rules";
+import { validate } from "../middlewares/validator.check";
+import { jwtCheck } from "../middlewares/jwt.check";
 
 class UsuarioRoutes {
+
     public router: Router;
 
     constructor() {
@@ -11,14 +13,16 @@ class UsuarioRoutes {
         this.config();
     }
 
-    config() {
-        this.router.post('/', usuarioRules(), validate, usuarioController.createUsuario);
-        this.router.get('/', usuarioController.getUsuarios);
-        this.router.get('/:id', usuarioController.getUsuario);
-        this.router.put('/:id', usuarioRules(), validate, usuarioController.updateUsuario);
-        this.router.delete('/:id', usuarioController.deleteUsuario);
+    private config() {
+        // listado
+        this.router.get('/', [jwtCheck], usuarioController.listar);
+        // insercion
+        this.router.post('/', insertRules(), [validate], usuarioController.insertar);
+        // actualizar
+        this.router.put('/', updateRules(), [validate], usuarioController.actualizar);
+        //eliminar
+        this.router.delete('/:cveUsuario', usuarioController.eliminar);
     }
-    
 }
 
 const usuarioRoutes = new UsuarioRoutes();

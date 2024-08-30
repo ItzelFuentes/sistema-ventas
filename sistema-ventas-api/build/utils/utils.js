@@ -27,57 +27,54 @@ exports.utils = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const keys_1 = __importDefault(require("../config/keys"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
-/*************************************************************************************
- *
+/**
  * @name Utils
- * @author Itzel Fuentes
- * @creation 27/06/2024
- *
- *************************************************************************************/
+ * @author Sandra Álvarez
+ * @creation 05/07/2024
+ */
 class Utils {
-    /*************************************************************
+    /*****************************************************
      * @name generateJWT
      * @description Metodo para generar un token OAUTH
      * @param payload
      * @returns string
-     *************************************************************/
+     *****************************************************/
     generateJWT(payload) {
         var token = jsonwebtoken_1.default.sign(payload, keys_1.default.secret.jwt, { expiresIn: '1h' });
         return token;
     }
-    /*************************************************************
-    * @name getPayload
-    * @description Obtener la ifnromación del JWT
-    * @param token
-    * @returns Object
-    *************************************************************/
+    /*****************************************************
+     * @name getPayload
+     * @description Obtener la información del JWT
+     * @param token
+     * @returns Object
+     *****************************************************/
     getPayload(token) {
         var payload = jsonwebtoken_1.default.verify(token, keys_1.default.secret.jwt);
         const { iat, exp } = payload, data = __rest(payload, ["iat", "exp"]);
         return data;
     }
-    /*************************************************************
-     * @name hashPassword
-     * @description Encriptar cadena de texto
-     * @param password
-     * @returns Promise
-     *************************************************************/
+    /*****************************************************
+ * @name hashPassword
+ * @description Encriptar cadena de texto
+ * @param password
+ * @returns String
+ *****************************************************/
     hashPassword(password) {
         return __awaiter(this, void 0, void 0, function* () {
             const salt = yield bcryptjs_1.default.genSaltSync(10);
             return yield bcryptjs_1.default.hashSync(password, salt);
         });
     }
-    /*************************************************************
-     * @name checkPassword
-     * @description Verificar la constraseña
-     * @param password
-     * @param encryptedPassword
-     * @returns Promise<any>
-     *************************************************************/
+    /*****************************************************
+* @name ckeckPassword
+* @description Verificar la contraseña
+* @param password
+* @returns String
+*****************************************************/
     checkPassword(password, encryptedPassword) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield bcryptjs_1.default.compare(password, encryptedPassword);
+            return yield bcryptjs_1.default.compareSync(password, encryptedPassword);
         });
     }
 }

@@ -14,29 +14,25 @@ datasource db {
 }
 
 
-
-model Usuario{
-  cveUsuario Int @id @default(autoincrement()) //@map("cveUsuario") //cuando quieres poner otro nombre pero se debe poner el de la bd
+model Usuario {
+  cveUsuario Int @id @default(autoincrement())
   nombre String @db.VarChar(250)
   apellidos String @db.VarChar(600)
   username String @db.VarChar(150)
   password String @db.VarChar(800)
   fechaRegistro DateTime @default(now())
-  cveRol        Int
-  rol           Rol      @relation(fields: [cveRol], references: [cveRol])  // Relación con Rol
+  rol Rol @relation(fields: [cveRol], references: [cveRol])
+  cveRol Int
 
-  @@map("tbl_usuario") 
+  @@map("tbl_usuario")
 }
-
 
 model Rol {
-  cveRol      Int      @id @default(autoincrement())
-  descripcion String   @db.VarChar(250)
-  clave       String?  @db.VarChar(45) 
-  activo      Boolean  @default(true) @db.TinyInt
+  cveRol Int @id @default(autoincrement())
+  descripcion String @db.VarChar(255)
+  clave String @db.VarChar(50)
+  activo Boolean @default(true)
 
-  usuarios    Usuario[]
-
-  @@map("rol") 
+  Usuario Usuario[]
+  @@map("rol")
 }
-

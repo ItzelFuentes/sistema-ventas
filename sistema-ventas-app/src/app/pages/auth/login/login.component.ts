@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { BaseForm } from '../../../shared/utils/base-forms';
+import { BaseForm } from '../../../shared/utils/base-form';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { AuthService } from '../services/auth.service';

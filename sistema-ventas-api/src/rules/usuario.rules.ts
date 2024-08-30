@@ -1,11 +1,32 @@
 import { body } from 'express-validator';
 
-export const usuarioRules = () => {
+export const insertRules = () => {
     return [
-        body('nombre').notEmpty().withMessage("El nombre es requerido").isLength({ max: 250 }).withMessage("El nombre debe tener máximo 250 caracteres"),
-        body('apellidos').notEmpty().withMessage("Los apellidos son requeridos").isLength({ max: 600 }).withMessage("Los apellidos deben tener máximo 600 caracteres"),
-        body('username').notEmpty().withMessage("El nombre de usuario es requerido").isLength({ max: 150 }).withMessage("El nombre de usuario debe tener máximo 150 caracteres"),
-        body('password').notEmpty().withMessage("La contraseña es requerida").isLength({ max: 800 }).withMessage("La contraseña debe tener máximo 800 caracteres"),
-        body('cveRol').notEmpty().withMessage("El rol es requerido").isInt().withMessage("El rol debe ser un número entero")
+        body("nombre").trim()
+            .not().isEmpty().withMessage("campo requerido")
+            .isLength({ min: 3, max: 350 }).withMessage("Rango Incorrecto"),
+        body("apellidos").trim()
+            .not().isEmpty().withMessage("campo requerido")
+            .isLength({ min: 3, max: 450 }).withMessage("Rango Incorrecto"),
+        body("username").trim()
+            .not().isEmpty().withMessage("campo requerido")
+            .isLength({ min: 3, max: 150 }).withMessage("Rango Incorrecto"),
+        body("password").trim()
+            .not().isEmpty().withMessage("campo requerido")
+            .isLength({ min: 3, max: 100 }).withMessage("Rango Incorrecto"),
+        body("cveRol").isInt({ min: 1}).withMessage("campo requerido"),
     ]
-}
+};
+
+export const updateRules = () => {
+    return [
+        body("cveUsuario").isInt({ min: 1}).withMessage("campo requerido"),
+        body("nombre").trim()
+            .not().isEmpty().withMessage("campo requerido")
+            .isLength({ min: 3, max: 350 }).withMessage("Rango Incorrecto"),
+        body("apellidos").trim()
+            .not().isEmpty().withMessage("campo requerido")
+            .isLength({ min: 3, max: 450 }).withMessage("Rango Incorrecto"),
+        body("cveRol").isInt({ min: 1}).withMessage("campo requerido"),
+    ]
+};
